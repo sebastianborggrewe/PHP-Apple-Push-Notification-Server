@@ -4,7 +4,7 @@
  * Allows to send a Push Notification to
  * a specific iPhone
  *
- * @author  Sebastian Borggrewe
+ * @author  Sebastian Borggrewe <me@sebastianborggrewe.de>
  * @since   2010/01/14
  * @package APNP
  */
