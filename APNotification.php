@@ -108,7 +108,7 @@ class APNotification {
    */
   public function setDeviceToken($deviceToken)
   {
-    $_deviceToken = $deviceToken;
+    $this->_deviceToken = $deviceToken;
   }
 
   /**
@@ -122,7 +122,7 @@ class APNotification {
     if($this->_checkMessageValue($message) === false)
       throw new Exception('You need to add a message for your Push Notification.');
 
-    $_message = $message;
+    $this->_message = $message;
     
   }
 
@@ -216,7 +216,7 @@ class APNotification {
   private function __getNotificationPayload()
   {
     # Add message to the payload
-    if($this->_checkMessage($this->_message) === false)
+    if($this->_checkMessageValue($this->_message) === false)
       throw new Exception('You need to add a message for your Push Notification.');
     
     $notificationBody['aps'] = array('alert' => $this->_message);
@@ -228,7 +228,7 @@ class APNotification {
     # Add sound if set
     if($this->_sound !== NULL && is_string($this->_sound))
       $notificationBody['aps']['sound'] = $this->_sound;
-
+    
     return $notificationPayload = json_encode($notificationBody);
   }
 
@@ -241,7 +241,7 @@ class APNotification {
     $notification =
       chr(0) .
       pack("n",32) . pack('H*', str_replace(' ', '', $this->_deviceToken)) .
-      pack("n",strlen($this->getNotificationPayload)) . $this->getNotificationPayload;
+      pack("n",strlen($this->__getNotificationPayload())) . $this->__getNotificationPayload();
 
     return $notification;
   }
@@ -280,7 +280,7 @@ class APNotification {
     # Connection failed?
     if ($errorString)
       throw new Exception('Can\'t connect to Apple Push Notification Service: '.$errorString);
-     
+    
     # Send Push Notification
     fwrite($fp, $this->__getNotification());
 
