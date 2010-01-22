@@ -8,6 +8,8 @@
  * @since   2010/01/14
  * @package APNP
  */
+error_reporting(E_ALL | E_STRICT);
+
 class APNotification {
 
   /**
@@ -52,6 +54,12 @@ class APNotification {
    * @var string
    */
   protected $_sound;
+
+  /**
+   * Stores the properties, that should be send to the
+   * remote iPhone Application
+   */
+  protected $_properties = array();
 
   /**
    * Defines wether Push Notification should be send
@@ -178,6 +186,26 @@ class APNotification {
   }
 
   /**
+   * Adds a Property which should be send to the
+   * remote iPhone Application
+   *
+   * @param string $key name of the property
+   * @param array/string $value can be an array or string
+   */
+  public function addProperty($key, $value)
+  {
+    # is the key empty or a space?
+    if(trim($key) === "" || $key === "aps")
+      throw new Exception("The key of your property needs a valid name, can't be a space or empty or named aps");
+    # is there already a property named $key
+    if(isset($this->_properties[$key]) === true)
+      throw new Exception("You already added a property with the name: ".$key);
+
+    # add property to property array
+    $this->_properties[$key] = $value;
+  }
+
+  /**
    * Checks wether the value of the message
    * is valid
    *
@@ -209,6 +237,15 @@ class APNotification {
   }
 
   /**
+   * Returns the properties
+   * @return array $this->_properties
+   */
+  private function __getProperties()
+  {
+    return $this->_properties;
+  }
+
+  /**
    * Creates the Payload Body for the APNS
    *
    * @return string JSON Codierter Push Notification body
@@ -228,8 +265,12 @@ class APNotification {
     # Add sound if set
     if($this->_sound !== NULL && is_string($this->_sound))
       $notificationBody['aps']['sound'] = $this->_sound;
-    
-    return $notificationPayload = json_encode($notificationBody);
+
+    # Merges the Properties and the aps dictonary
+    if($this->_properties !== NULL && is_array($this->_properties))
+      $notificationBody = array_merge($notificationBody, $this->__getProperties());
+
+    return json_encode($notificationBody);
   }
 
   /**
@@ -244,6 +285,14 @@ class APNotification {
       pack("n",strlen($this->__getNotificationPayload())) . $this->__getNotificationPayload();
 
     return $notification;
+  }
+
+  /**
+   * DEBUG Output;
+   */
+  public function debug()
+  {
+    echo $this->__getNotificationPayload();
   }
 
   /**
