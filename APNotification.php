@@ -78,10 +78,10 @@ class APNotification extends APNSBase{
    * enviroment.
    * Valid values: development, production
    *
-   * @param string $enviroment (production or developement)
+   * @param string $environment (production or development)
    */
-  public function  __construct($enviroment = "developement") {
-    parent::__construct($enviroment);
+  public function  __construct($environment = "development") {
+    parent::__construct($environment);
   }
 
   /*
