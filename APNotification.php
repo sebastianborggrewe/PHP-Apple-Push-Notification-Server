@@ -277,7 +277,8 @@ class APNotification extends APNSBase{
     # Connection failed?
     if ($errorString)
       throw new Exception('Can\'t connect to Apple Push Notification Service: '.$errorString);
-      echo $this->__getNotification();
+    
+    //echo $this->__getNotification();
 
     # Send Push Notification
     fwrite($fp, $this->__getNotification());
