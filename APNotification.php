@@ -32,7 +32,7 @@ class APNotification extends APNSBase{
    */
   protected static $_ENVIROMENTS = array(
                    'development' => 'ssl://gateway.sandbox.push.apple.com:2195',
-                   'production' => 'ssl://gateway.push.apple.com:219');
+                   'production' => 'ssl://gateway.push.apple.com:2195');
 
   /**
    * Unique iPhone Device Token
